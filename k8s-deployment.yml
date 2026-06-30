@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: fastapi-container
-        image: smsohag/fastapi-app:v1.0.0 # আপনার ডকার হাবের ইমেজ নাম ও ট্যাগ
+        image: smsohag/fastapi-app:latest # আপনার ডকার হাবের ইমেজ নাম ও ট্যাগ
         ports:
         - containerPort: 8000 # ডকারফাইলে আমরা যে পোর্ট এক্সপোজ করেছিলাম
 ---
