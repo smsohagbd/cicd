@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+  labels:
+    app: fastapi-app
+spec:
+  replicas: 3 # আমরা ৩টি পড রান করব, যা ৩টি ওয়ার্কার নোডে ডিস্ট্রিবিউট হতে পারবে
+  selector:
+    matchLabels:
+      app: fastapi-app
+  template:
+    metadata:
+      labels:
+        app: fastapi-app
+    spec:
+      containers:
+      - name: fastapi-container
+        image: smsohag/fastapi-app:v1.0.0 # আপনার ডকার হাবের ইমেজ নাম ও ট্যাগ
+        ports:
+        - containerPort: 8000 # ডকারফাইলে আমরা যে পোর্ট এক্সপোজ করেছিলাম
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+spec:
+  type: NodePort # ক্লাউডের বাইরে থেকে রিয়েল আইপি/ডোমেন দিয়ে টেস্ট করার জন্য NodePort বেস্ট
+  selector:
+    app: fastapi-app
+  ports:
+    - port: 80         # সার্ভিসের ইন্টারনাল পোর্ট
+      targetPort: 8000   # কন্টেইনারের ভেতরের পোর্ট
+      nodePort: 32000    # আপনার ভিপিএস আইপির এই পোর্টে হিট করলে অ্যাপ ওপেন হবে (রেঞ্জ: 30000-32767)
