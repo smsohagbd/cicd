@@ -21,7 +21,23 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # আমরা এখন নতুন ইমেজের ট্যাগ v1.0.0 না দিয়ে 'latest' দিচ্ছি অটোমেশনের সুবিধার জন্য
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-app:v1.0.0 ./backend
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-app:v1.0.0
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-app:latest ./backend
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-app:latest
+
+      # 🎯 নতুন ম্যাজিক পার্ট: কুবারনেটিস অটো ডিপ্লয়মেন্ট
+      - name: Deploy to Kubernetes Cluster
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBERNETES_KUBEconfig }}
+
+      - name: Apply K8s Manifests and Rollout
+        run: |
+          # যদি মাস্টারে আগে ফাইল না থাকে, গিটহাবের এই ফাইলটাই ক্লাস্টারে অ্যাপ্লাই হবে
+          kubectl apply -f k8s-deployment.yml
+          
+          # কুবারনেটিসকে জোর করে বলা যে নতুন ইমেজটি পুল করে পডগুলো রিস্টার্ট করো (Zero-Downtime Update)
+          kubectl rollout restart deployment/fastapi-deployment
