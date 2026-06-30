@@ -11,6 +11,6 @@ def read_root():
     return {
         "status": "success",
         "version": "1.0.0",
-        "message": "Welcome to our production cluster!",
+        "message": "Welcome to our production cluster! happy",
         "served_by_pod": container_id
     }
