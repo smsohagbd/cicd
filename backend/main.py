@@ -10,7 +10,7 @@ def read_root():
     
     return {
         "status": "success",
-        "version": "2.0.0 Latest",
-        "message": "Welcome to our production cluster! Version 2.0 Auto Deploy Successful!",
+        "Name": "Runi 3.0.0",
+        "message": "Welcome to our production Runi",
         "served_by_pod": container_id
     }
