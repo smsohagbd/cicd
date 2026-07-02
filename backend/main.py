@@ -11,6 +11,6 @@ def read_root():
     return {
         "status": "success",
         "Name": "Valo Runi 3.0.0",
-        "message": "Welcome to our production Runi valoi",
+        "message": "Welcome to our production Runi valoi cilo",
         "served_by_pod": container_id
     }
